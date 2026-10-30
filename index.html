@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Techimedia – Digital Business Card" />
+  <title>Techimedia | Digital Business Card</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:        #1565C0;
+      --blue-mid:    #1976D2;
+      --blue-light:  #E3F2FD;
+      --blue-soft:   #BBDEFB;
+      --green:       #00897B;
+      --green-dark:  #00695C;
+      --green-light: #E0F2F1;
+      --purple:      #6A1B9A;
+      --purple-mid:  #7B1FA2;
+      --purple-light:#F3E5F5;
+      --navy:        #0D1B3E;
+      --navy-mid:    #1a2c52;
+      --text-dark:   #1A2340;
+      --text-mid:    #3a4a6b;
+      --text-muted:  #7a8aaa;
+      --bg:          #EEF3FC;
+      --bg-white:    #FFFFFF;
+      --border:      #dde6f5;
+      --radius:      18px;
+      --radius-md:   14px;
+      --radius-sm:   10px;
+      --shadow-sm:   0 2px 10px rgba(21,101,192,0.08);
+      --shadow-md:   0 6px 24px rgba(21,101,192,0.13);
+      --shadow-lg:   0 12px 40px rgba(21,101,192,0.16);
+      --t:           0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 28px 14px 44px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Background ── */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 95% 5%,  rgba(187,222,251,0.55) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 45% at 5%  90%, rgba(206,187,234,0.35) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(224,242,241,0.30) 0%, transparent 60%),
+        var(--bg);
+    }
+
+    /* decorative blobs */
+    .blob {
+      position: fixed; border-radius: 50%; filter: blur(60px);
+      opacity: .22; pointer-events: none; z-index: 0;
+    }
+    .b1 { width:380px;height:380px; background:var(--blue-soft); top:-140px; right:-80px; animation:bfloat 18s ease-in-out infinite; }
+    .b2 { width:280px;height:280px; background:#CE93D8;           bottom:-90px; left:-60px; animation:bfloat 14s ease-in-out infinite reverse; }
+    @keyframes bfloat { 0%,100%{transform:translate(0,0)} 50%{transform:translate(25px,35px)} }
+
+    /* subtle dot grid */
+    .dots {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(21,101,192,0.07) 1px, transparent 1px);
+      background-size: 26px 26px;
+    }
+
+    /* ── Wrapper ── */
+    .wrapper { position:relative; z-index:1; width:100%; max-width:460px; display:flex; flex-direction:column; gap:14px; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--bg-white);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      animation: entrance .75s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes entrance { from{opacity:0;transform:translateY(36px) scale(.95)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+    /* ══ HERO ══ */
+    .hero {
+      position: relative;
+      height: 210px;
+      background: linear-gradient(140deg, var(--navy) 0%, var(--navy-mid) 50%, #1a3060 100%);
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 44px;
+      padding-bottom: 52px;
+    }
+    /* Curved white bottom arc — sits fully below the tagline */
+    .hero-arc {
+      position: absolute;
+      bottom: -72px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 130%;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--bg-white);
+      z-index: 2;
+    }
+    .hero-blob-r {
+      position: absolute; top: -50px; right: -50px; width: 200px; height: 200px;
+      border-radius: 50%; background: rgba(187,222,251,0.18); filter: blur(40px);
+    }
+    .hero-blob-l {
+      position: absolute; bottom: -30px; left: -40px; width: 160px; height: 160px;
+      border-radius: 50%; background: rgba(206,187,234,0.18); filter: blur(40px);
+    }
+    .hero-dots {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .hero-content {
+      position: relative; z-index: 3; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+    }
+    .hero-logo-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; margin-bottom: 8px;
+    }
+    .hero-tm {
+      width: 46px; height: 46px; border-radius: 13px;
+      background: linear-gradient(135deg, var(--blue), #2196F3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 800; color: #fff;
+      letter-spacing: -1px; box-shadow: 0 4px 16px rgba(33,150,243,0.45);
+      flex-shrink: 0;
+    }
+    .hero-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(24px, 6vw, 33px);
+      font-weight: 800; color: #fff; letter-spacing: -.4px; line-height: 1;
+    }
+    .hero-tagline {
+      font-size: clamp(9px, 2.2vw, 11px);
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.60);
+      margin-top: 7px;
+      padding: 0 12px;
+      white-space: nowrap;
+    }
+
+    /* available pill */
+    .avail {
+      position: absolute; top: 12px; left: 12px; z-index: 4;
+      display: flex; align-items: center; gap: 5px;
+      background: rgba(0,137,123,0.22); border: 1px solid rgba(0,137,123,0.42);
+      border-radius: 100px; padding: 4px 10px;
+      font-size: 10.5px; font-weight: 600; color: #80CBC4;
+    }
+    .adot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #4DB6AC; box-shadow: 0 0 6px #4DB6AC;
+      animation: blink 1.6s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+    /* partner badge */
+    .partner {
+      position: absolute; top: 12px; right: 12px; z-index: 4;
+      font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+      color: rgba(255,255,255,0.45); text-align: right; line-height: 1.4;
+    }
+
+    /* ── AVATAR ── */
+    .avatar-wrap { display:flex; justify-content:center; margin-top:-50px; position:relative; z-index:5; }
+    .avatar {
+      width:96px; height:96px; border-radius:50%;
+      background: linear-gradient(135deg, var(--blue), var(--purple-mid));
+      border: 4px solid var(--bg-white);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:800; color:#fff;
+      box-shadow: 0 6px 28px rgba(21,101,192,0.28), 0 0 0 1px rgba(21,101,192,0.1);
+      letter-spacing:-1px;
+    }
+
+    /* ── BODY ── */
+    .body { padding:12px 22px 26px; text-align:center; }
+
+    .name { font-family:'Space Grotesk',sans-serif; font-size:clamp(22px,5vw,27px); font-weight:800; color:var(--navy); letter-spacing:-.4px; margin-bottom:3px; }
+    .sub  { font-size:12.5px; font-weight:600; color:var(--blue); letter-spacing:.2px; margin-bottom:20px; }
+
+    /* ── STATS ── */
+    .stats {
+      display:flex; gap:0; margin-bottom:22px;
+      border:1px solid var(--border); border-radius:var(--radius-sm);
+      overflow:hidden; background:var(--bg);
+    }
+    .stat { flex:1; padding:12px 6px; text-align:center; position:relative; }
+    .stat+.stat::before { content:'';position:absolute;left:0;top:18%;bottom:18%;width:1px;background:var(--border); }
+    .sv { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:800; color:var(--blue); display:block; }
+    .sl { font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-top:2px; }
+
+    /* ── DIVIDER ── */
+    .div-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .div-line { flex:1; height:1px; background:var(--border); }
+    .div-lbl  { font-size:9.5px; text-transform:uppercase; letter-spacing:2px; color:var(--text-muted); font-weight:700; white-space:nowrap; }
+
+    /* ════════════════════════════════
+       CONTACT THUMBNAIL GRID
+    ════════════════════════════════ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-bottom: 22px;
+    }
+
+    .ctile {
+      position: relative;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 9px; padding: 18px 8px 14px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border);
+      background: var(--bg-white);
+      text-decoration: none;
+      overflow: hidden;
+      transition: var(--t);
+      min-height: 104px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ctile::before {
+      content:'';position:absolute;top:0;left:16%;right:16%;
+      height:3px;border-radius:0 0 6px 6px;
+      background:var(--tc,var(--blue));opacity:0;transition:var(--t);
+    }
+    .ctile::after {
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse at 50% 0%,var(--tc,var(--blue)),transparent 72%);
+      opacity:0;transition:var(--t);
+    }
+    .ctile:hover::before { opacity:1; }
+    .ctile:hover::after  { opacity:.07; }
+    .ctile:hover {
+      border-color: var(--tc,var(--blue));
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: var(--shadow-md);
+    }
+    .ctile:active { transform:translateY(-1px) scale(.97); }
+
+    .ctile.wide {
+      grid-column:span 2;
+      flex-direction:row; justify-content:flex-start;
+      gap:14px; padding:16px 18px; min-height:unset;
+    }
+    .ctile.wide::after {
+      background:radial-gradient(ellipse at 0% 50%,var(--tc,var(--blue)),transparent 70%);
+    }
+
+    .tibble {
+      width:48px;height:48px;border-radius:13px;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;position:relative;z-index:1;
+      transition:transform .28s cubic-bezier(.34,1.56,.64,1);
+    }
+    .tibble i { font-size:22px; }
+    .ctile.wide .tibble { width:42px;height:42px;border-radius:11px; }
+    .ctile.wide .tibble i { font-size:19px; }
+    .ctile:hover .tibble { transform:scale(1.13) rotate(-5deg); }
+
+    .tinfo { flex:1; text-align:left; position:relative; z-index:1; }
+    .tlbl-top { font-size:9.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-muted); font-weight:700; margin-bottom:3px; }
+    .tval { font-size:13px; font-weight:700; color:var(--text-dark); line-height:1.3; }
+
+    .tlbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:var(--text-muted); position:relative; z-index:1; transition:color var(--t); }
+    .ctile:hover .tlbl { color:var(--text-dark); }
+
+    /* color skins — light bg versions */
+    .ic-blue   { --tc:var(--blue);   background:var(--blue-light);   color:var(--blue); }
+    .ic-green  { --tc:var(--green);  background:var(--green-light);  color:var(--green); }
+    .ic-purple { --tc:var(--purple); background:var(--purple-light); color:var(--purple); }
+    .ic-pink   { --tc:#C2185B;       background:#FCE4EC;             color:#C2185B; }
+    .ic-cyan   { --tc:#0097A7;       background:#E0F7FA;             color:#0097A7; }
+    .ic-orange { --tc:#E65100;       background:#FBE9E7;             color:#E65100; }
+
+    /* stagger */
+    .ctile:nth-child(1){animation:fup .5s .05s ease both}
+    .ctile:nth-child(2){animation:fup .5s .13s ease both}
+    .ctile:nth-child(3){animation:fup .5s .21s ease both}
+    .ctile:nth-child(4){animation:fup .5s .29s ease both}
+    .ctile:nth-child(5){animation:fup .5s .37s ease both}
+    .ctile:nth-child(6){animation:fup .5s .45s ease both}
+
+    /* ════════════════════════════════
+       SERVICES SECTION
+    ════════════════════════════════ */
+    .services-grid { display:flex; flex-direction:column; gap:12px; margin-bottom:22px; }
+
+    .srv-card {
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border);
+      background: var(--bg-white);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      animation: fup .6s ease both;
+    }
+    .srv-card:nth-child(1){ animation-delay:.05s }
+    .srv-card:nth-child(2){ animation-delay:.15s }
+    .srv-card:nth-child(3){ animation-delay:.25s }
+
+    .srv-head {
+      display:flex; align-items:center; gap:12px;
+      padding:13px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.25);
+    }
+    .srv-icon {
+      width:40px; height:40px; border-radius:11px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:20px; flex-shrink:0; color:#fff;
+    }
+    .srv-title    { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:#fff; }
+    .srv-subtitle { font-size:10.5px; font-weight:500; color:rgba(255,255,255,0.75); margin-top:1px; }
+
+    /* Service head backgrounds */
+    .s-blue  .srv-head { background:linear-gradient(135deg,var(--blue),var(--blue-mid)); border-bottom-color:rgba(255,255,255,0.15); }
+    .s-blue  .srv-icon { background:rgba(255,255,255,0.18); }
+    .s-green .srv-head { background:linear-gradient(135deg,var(--green-dark),var(--green)); border-bottom-color:rgba(255,255,255,0.15); }
+    .s-green .srv-icon { background:rgba(255,255,255,0.18); }
+    .s-purple .srv-head { background:linear-gradient(135deg,var(--purple),var(--purple-mid)); border-bottom-color:rgba(255,255,255,0.15); }
+    .s-purple .srv-icon { background:rgba(255,255,255,0.18); }
+
+    .srv-items { padding:10px 12px 12px; display:flex; flex-direction:column; gap:6px; background:var(--bg-white); }
+
+    .srv-item {
+      display:flex; align-items:center; gap:10px;
+      padding:8px 10px; border-radius:8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      transition: var(--t);
+    }
+    .srv-item:hover { border-color:var(--s-color,var(--blue)); background:var(--s-bg,var(--blue-light)); transform:translateX(3px); }
+
+    .srv-item-icon {
+      width:28px; height:28px; border-radius:7px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:13px; flex-shrink:0;
+    }
+    .srv-item-name { font-size:12.5px; font-weight:600; color:var(--text-mid); }
+
+    .s-blue   .srv-item-icon { background:var(--blue-light);   color:var(--blue);   --s-color:var(--blue);   --s-bg:var(--blue-light); }
+    .s-green  .srv-item-icon { background:var(--green-light);  color:var(--green);  --s-color:var(--green);  --s-bg:var(--green-light); }
+    .s-purple .srv-item-icon { background:var(--purple-light); color:var(--purple); --s-color:var(--purple); --s-bg:var(--purple-light); }
+
+    /* ── CTA ── */
+    .cta-group { display:flex; gap:10px; margin-bottom:20px; }
+    .btn {
+      flex:1; padding:13px 12px; border-radius:var(--radius-sm);
+      font-size:13px; font-weight:700; font-family:'Inter',sans-serif;
+      cursor:pointer; border:none; transition:var(--t);
+      display:flex; align-items:center; justify-content:center; gap:7px;
+      text-decoration:none; letter-spacing:.2px;
+    }
+    .btn-primary { background:linear-gradient(135deg,var(--blue),var(--blue-mid)); color:#fff; box-shadow:0 4px 18px rgba(21,101,192,0.30); }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 26px rgba(21,101,192,0.42); }
+    .btn-outline { background:transparent; color:var(--blue); border:2px solid var(--blue); }
+    .btn-outline:hover { background:var(--blue-light); transform:translateY(-2px); }
+    .btn:active { transform:scale(.97); }
+
+    /* ── SOCIAL ── */
+    .social-bar { display:flex; justify-content:center; gap:9px; margin-bottom: 24px; }
+    .soc-btn {
+      width:44px; height:44px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--bg); border:1.5px solid var(--border);
+      color:var(--text-muted); text-decoration:none; font-size:18px;
+      transition:var(--t); position:relative; overflow:hidden;
+    }
+    .soc-btn:hover {
+      background:var(--hbg, var(--blue-light));
+      border-color:var(--hc, var(--blue));
+      color:var(--hc, var(--blue));
+      transform:translateY(-3px);
+      box-shadow:0 6px 18px rgba(0,0,0,0.1);
+    }
+
+
+
+
+    /* ── NAVY FOOTER STRIP ── */
+    .navy-strip {
+      background: var(--navy);
+      margin: 0 -22px -26px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      overflow: hidden;
+      flex-wrap: nowrap;
+    }
+    .ns-left { display:flex; align-items:center; gap:10px; }
+    .ns-globe { width:36px; height:36px; border-radius:50%; border:2px solid rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; font-size:18px; color:#90CAF9; }
+    .ns-web-lbl { font-size:10px; color:rgba(255,255,255,0.5); font-weight:500; margin-bottom:2px; }
+    .ns-web-url { font-size:13px; font-weight:700; color:#fff; }
+
+    .ns-right { display:flex; align-items:center; gap:10px; }
+    .ns-wa { width:36px; height:36px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; box-shadow:0 3px 10px rgba(37,211,102,0.4); }
+    .ns-touch-lbl { font-size:10px; color:rgba(255,255,255,0.5); font-weight:500; margin-bottom:2px; }
+    .ns-phone { font-size:13px; font-weight:700; color:#fff; }
+
+    .lets-tag {
+      position:absolute; bottom:-2px; right:16px;
+      font-size:10px; font-weight:800; color:rgba(255,255,255,0.45);
+      letter-spacing:.5px; line-height:1.4; text-align:right; font-style:italic;
+    }
+
+    /* ── FOOTER CARD ── */
+    .footer-card {
+      background:var(--bg-white); border-radius:var(--radius); border:1px solid var(--border);
+      padding:14px 20px; display:flex; align-items:center; justify-content:space-between;
+      box-shadow:var(--shadow-md);
+      animation:entrance .8s .18s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    .fc-brand { display:flex; align-items:center; gap:9px; }
+    .fc-logo { width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--purple-mid));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;font-family:'Space Grotesk',sans-serif;letter-spacing:-1px; }
+    .fc-text strong { color:var(--navy); font-size:13px; display:block; font-weight:800; }
+    .fc-text span   { font-size:11px; color:var(--text-muted); }
+    .save-btn {
+      display:flex; align-items:center; gap:6px;
+      background:linear-gradient(135deg,var(--blue),var(--purple-mid));
+      color:#fff; border:none; border-radius:10px; padding:9px 14px;
+      font-size:12px; font-weight:700; cursor:pointer; transition:var(--t);
+      font-family:'Inter',sans-serif; box-shadow:0 4px 14px rgba(21,101,192,0.28);
+    }
+    .save-btn:hover { transform:scale(1.05); box-shadow:0 6px 20px rgba(21,101,192,0.4); }
+
+    /* ── TOAST ── */
+    .toast {
+      position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(22px);
+      background:var(--navy); border:1px solid rgba(0,137,123,0.4); color:#4DB6AC;
+      padding:10px 24px; border-radius:100px; font-size:13px; font-weight:600;
+      box-shadow:var(--shadow-lg); opacity:0; pointer-events:none;
+      transition:all .4s cubic-bezier(.34,1.56,.64,1); z-index:999; white-space:nowrap;
+    }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    .fade-up { animation:fup .65s ease both; }
+    @keyframes fup { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── RESPONSIVE ── */
+
+    /* Small phones: 360px and below */
+    @media (max-width: 360px) {
+      body { padding: 10px 8px 36px; }
+      .hero { height: 190px; padding-top: 38px; }
+      .hero-tm { width: 38px; height: 38px; font-size: 14px; border-radius: 10px; }
+      .hero-brand { font-size: 22px; }
+      .hero-tagline { font-size: 8px; letter-spacing: 1.5px; }
+      .hero-arc { bottom: -78px; height: 95px; width: 140%; }
+      .avatar { width: 76px; height: 76px; font-size: 20px; }
+      .avatar-wrap { margin-top: -44px; }
+      .name { font-size: 20px; }
+      .body { padding: 10px 12px 20px; }
+      .contact-grid { gap: 7px; }
+      .ctile { min-height: 90px; padding: 14px 6px 11px; }
+      .ctile.wide { padding: 13px 12px; gap: 10px; }
+      .tibble { width: 36px; height: 36px; border-radius: 10px; }
+      .tibble i { font-size: 17px; }
+      .tval { font-size: 11.5px; }
+      .tlbl { font-size: 9px; }
+      .cta-group { flex-direction: column; gap: 8px; }
+      .btn { font-size: 12px; padding: 11px 10px; }
+      .social-bar { gap: 7px; }
+      .soc-btn { width: 38px; height: 38px; font-size: 16px; border-radius: 10px; }
+      .navy-strip { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .ns-phone, .ns-web-url { font-size: 12px; }
+      .srv-title { font-size: 13px; }
+      .srv-item-name { font-size: 11.5px; }
+      .stats { margin-bottom: 18px; }
+      .sv { font-size: 18px; }
+    }
+
+    /* Standard phones: 361px – 480px */
+    @media (max-width: 480px) {
+      body { padding: 12px 10px 40px; }
+      .hero { height: 196px; padding-top: 40px; }
+      .hero-tm { width: 42px; height: 42px; font-size: 15px; }
+      .hero-brand { font-size: 26px; }
+      .hero-tagline { font-size: 9.5px; letter-spacing: 1.8px; }
+      .hero-arc { bottom: -74px; width: 135%; }
+      .avatar { width: 82px; height: 82px; font-size: 22px; }
+      .avatar-wrap { margin-top: -46px; }
+      .body { padding: 10px 15px 22px; }
+      .contact-grid { gap: 8px; }
+      .ctile { min-height: 96px; padding: 16px 7px 12px; }
+      .ctile.wide { padding: 14px 15px; }
+      .tibble { width: 40px; height: 40px; }
+      .tibble i { font-size: 18px; }
+      .cta-group { flex-direction: column; gap: 8px; }
+      .btn { font-size: 12.5px; }
+      .social-bar { gap: 8px; }
+      .soc-btn { width: 40px; height: 40px; font-size: 17px; }
+      .navy-strip { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .stats { margin-bottom: 18px; }
+      .srv-head { padding: 11px 14px; }
+      .srv-items { padding: 8px 10px 10px; }
+    }
+
+    /* Prevent hero-tagline overflow on very narrow screens */
+    @media (max-width: 320px) {
+      .hero-tagline { white-space: normal; font-size: 8px; letter-spacing: 1px; }
+      .hero-logo-row { flex-direction: column; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-layer"></div>
+  <div class="dots"></div>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+
+  <div class="wrapper">
+    <div class="card">
+
+      <!-- ══ HERO ══ -->
+      <div class="hero">
+        <div class="hero-blob-r"></div>
+        <div class="hero-blob-l"></div>
+        <div class="hero-dots"></div>
+
+        <div class="avail"><span class="adot"></span>Available</div>
+        <div class="partner" style="position:absolute;top:13px;right:13px;z-index:4;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.45);text-align:right;line-height:1.3;">Your<br>Digital<br>Partner</div>
+
+        <div class="hero-content">
+          <div class="hero-logo-row">
+            <div class="hero-tm">TM</div>
+            <div class="hero-brand">Techimedia<sup style="font-size:12px;font-weight:600;vertical-align:super;opacity:.7">™</sup></div>
+          </div>
+          <div class="hero-tagline">Innovate your world with Techimedia</div>
+        </div>
+
+        <div class="hero-arc"></div>
+      </div>
+
+      <!-- ══ AVATAR ══ -->
+      <div class="avatar-wrap"><div class="avatar">TM</div></div>
+
+      <!-- ══ BODY ══ -->
+      <div class="body">
+        <h1 class="name">Techimedia</h1>
+        <p class="sub">Web &bull; Digital Marketing &bull; Social Media</p>
+
+        <!-- Stats -->
+        <div class="stats fade-up">
+          <div class="stat"><span class="sv">5+</span><span class="sl">Years</span></div>
+          <div class="stat"><span class="sv">200+</span><span class="sl">Clients</span></div>
+          <div class="stat"><span class="sv">500+</span><span class="sl">Projects</span></div>
+        </div>
+
+        <!-- ─── Contact ─── -->
+        <div class="div-row">
+          <div class="div-line"></div><span class="div-lbl">Get in Touch</span><div class="div-line"></div>
+        </div>
+
+        <!-- ══ CONTACT THUMBNAIL GRID ══ -->
+        <div class="contact-grid">
+
+          <a href="tel:+919888623715" class="ctile wide" style="--tc:var(--blue)">
+            <div class="tibble ic-blue"><i class="ph ph-phone-call"></i></div>
+            <div class="tinfo">
+              <div class="tlbl-top">Phone / Call</div>
+              <div class="tval">+91 9888623715</div>
+            </div>
+          </a>
+
+          <a href="https://wa.me/919888623715" target="_blank" rel="noopener" class="ctile" style="--tc:#25D366">
+            <div class="tibble" style="background:#E8F5E9;color:#2E7D32"><i class="ph ph-whatsapp-logo"></i></div>
+            <div class="tlbl">WhatsApp</div>
+          </a>
+
+          <a href="mailto:info@techimedia.com" class="ctile wide" style="--tc:var(--purple)">
+            <div class="tibble ic-purple"><i class="ph ph-envelope-simple"></i></div>
+            <div class="tinfo">
+              <div class="tlbl-top">Email Us</div>
+              <div class="tval">info@techimedia.com</div>
+            </div>
+          </a>
+
+          <a href="https://instagram.com/techimedia" target="_blank" rel="noopener" class="ctile" style="--tc:#C2185B">
+            <div class="tibble ic-pink"><i class="ph ph-instagram-logo"></i></div>
+            <div class="tlbl">Instagram</div>
+          </a>
+
+          <a href="https://www.techimedia.com" target="_blank" rel="noopener" class="ctile wide" style="--tc:var(--green)">
+            <div class="tibble ic-green"><i class="ph ph-globe-hemisphere-west"></i></div>
+            <div class="tinfo">
+              <div class="tlbl-top">Website</div>
+              <div class="tval">www.techimedia.com</div>
+            </div>
+          </a>
+
+          <a href="https://maps.google.com/?q=Techimedia" target="_blank" rel="noopener" class="ctile" style="--tc:#E65100">
+            <div class="tibble ic-orange"><i class="ph ph-map-pin-area"></i></div>
+            <div class="tlbl">Location</div>
+          </a>
+
+        </div>
+
+        <!-- ─── Services ─── -->
+        <div class="div-row">
+          <div class="div-line"></div><span class="div-lbl">Our Services</span><div class="div-line"></div>
+        </div>
+
+        <!-- ══ SERVICES ══ -->
+        <div class="services-grid">
+
+          <!-- Web Dev — BLUE -->
+          <div class="srv-card s-blue">
+            <div class="srv-head">
+              <div class="srv-icon"><i class="ph ph-code"></i></div>
+              <div>
+                <div class="srv-title">Web Development</div>
+                <div class="srv-subtitle">Build Powerful Websites</div>
+              </div>
+            </div>
+            <div class="srv-items">
+              <div class="srv-item" style="--s-color:var(--blue);--s-bg:var(--blue-light)">
+                <div class="srv-item-icon" style="background:var(--blue-light);color:var(--blue)"><i class="ph ph-globe"></i></div>
+                <div class="srv-item-name">Website Design &amp; Development</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--blue);--s-bg:var(--blue-light)">
+                <div class="srv-item-icon" style="background:var(--blue-light);color:var(--blue)"><i class="ph ph-shopping-cart"></i></div>
+                <div class="srv-item-name">Ecommerce Website Development</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--blue);--s-bg:var(--blue-light)">
+                <div class="srv-item-icon" style="background:var(--blue-light);color:var(--blue)"><i class="ph ph-terminal-window"></i></div>
+                <div class="srv-item-name">Software Development</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--blue);--s-bg:var(--blue-light)">
+                <div class="srv-item-icon" style="background:var(--blue-light);color:var(--blue)"><i class="ph ph-device-mobile"></i></div>
+                <div class="srv-item-name">Mobile App Development</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--blue);--s-bg:var(--blue-light)">
+                <div class="srv-item-icon" style="background:var(--blue-light);color:var(--blue)"><i class="ph ph-paint-brush"></i></div>
+                <div class="srv-item-name">Graphic Designing / Video Editing</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Digital Marketing — GREEN -->
+          <div class="srv-card s-green">
+            <div class="srv-head">
+              <div class="srv-icon"><i class="ph ph-megaphone-simple"></i></div>
+              <div>
+                <div class="srv-title">Digital Marketing Services</div>
+                <div class="srv-subtitle">Grow Your Online Presence</div>
+              </div>
+            </div>
+            <div class="srv-items">
+              <div class="srv-item" style="--s-color:var(--green);--s-bg:var(--green-light)">
+                <div class="srv-item-icon" style="background:var(--green-light);color:var(--green)"><i class="ph ph-magnifying-glass"></i></div>
+                <div class="srv-item-name">SEO Services</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--green);--s-bg:var(--green-light)">
+                <div class="srv-item-icon" style="background:var(--green-light);color:var(--green)"><i class="ph ph-instagram-logo"></i></div>
+                <div class="srv-item-name">Social Media Marketing</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--green);--s-bg:var(--green-light)">
+                <div class="srv-item-icon" style="background:var(--green-light);color:var(--green)"><i class="ph ph-google-logo"></i></div>
+                <div class="srv-item-name">Google Ads / PPC</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--green);--s-bg:var(--green-light)">
+                <div class="srv-item-icon" style="background:var(--green-light);color:var(--green)"><i class="ph ph-meta-logo"></i></div>
+                <div class="srv-item-name">Meta Ads (Facebook &amp; Instagram)</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--green);--s-bg:var(--green-light)">
+                <div class="srv-item-icon" style="background:var(--green-light);color:var(--green)"><i class="ph ph-users-three"></i></div>
+                <div class="srv-item-name">Lead Generation</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Media Management — PURPLE -->
+          <div class="srv-card s-purple">
+            <div class="srv-head">
+              <div class="srv-icon"><i class="ph ph-share-network"></i></div>
+              <div>
+                <div class="srv-title">Social Media Management</div>
+                <div class="srv-subtitle">Engage. Grow. Convert.</div>
+              </div>
+            </div>
+            <div class="srv-items">
+              <div class="srv-item" style="--s-color:var(--purple);--s-bg:var(--purple-light)">
+                <div class="srv-item-icon" style="background:var(--purple-light);color:var(--purple)"><i class="ph ph-facebook-logo"></i></div>
+                <div class="srv-item-name">Facebook Reels / Post</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--purple);--s-bg:var(--purple-light)">
+                <div class="srv-item-icon" style="background:var(--purple-light);color:var(--purple)"><i class="ph ph-instagram-logo"></i></div>
+                <div class="srv-item-name">Instagram Reels / Post</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--purple);--s-bg:var(--purple-light)">
+                <div class="srv-item-icon" style="background:var(--purple-light);color:var(--purple)"><i class="ph ph-youtube-logo"></i></div>
+                <div class="srv-item-name">Youtube Reels</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--purple);--s-bg:var(--purple-light)">
+                <div class="srv-item-icon" style="background:var(--purple-light);color:var(--purple)"><i class="ph ph-gear-six"></i></div>
+                <div class="srv-item-name">Customized Services</div>
+              </div>
+              <div class="srv-item" style="--s-color:var(--purple);--s-bg:var(--purple-light)">
+                <div class="srv-item-icon" style="background:var(--purple-light);color:var(--purple)"><i class="ph ph-video"></i></div>
+                <div class="srv-item-name">Video Editing</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- ══ END SERVICES ══ -->
+
+        <!-- CTA -->
+        <div class="cta-group fade-up">
+          <button class="btn btn-primary" onclick="saveContact()"><i class="ph ph-user-plus"></i> Save Contact</button>
+          <button class="btn btn-outline" onclick="shareCard()"><i class="ph ph-share-network"></i> Share Card</button>
+        </div>
+
+        <!-- Social -->
+        <div class="div-row">
+          <div class="div-line"></div><span class="div-lbl">Follow Us</span><div class="div-line"></div>
+        </div>
+        <div class="social-bar">
+          <a href="https://facebook.com/techimedia" target="_blank" class="soc-btn" style="--hbg:#E3F2FD;--hc:#1877f2" title="Facebook"><i class="ph ph-facebook-logo"></i></a>
+          <a href="https://instagram.com/techimedia" target="_blank" class="soc-btn" style="--hbg:#FCE4EC;--hc:#C2185B" title="Instagram"><i class="ph ph-instagram-logo"></i></a>
+          <a href="https://linkedin.com/company/techimedia" target="_blank" class="soc-btn" style="--hbg:#E3F2FD;--hc:#0077b5" title="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+          <a href="https://youtube.com/@techimedia" target="_blank" class="soc-btn" style="--hbg:#FFEBEE;--hc:#c62828" title="YouTube"><i class="ph ph-youtube-logo"></i></a>
+          <a href="https://wa.me/919888623715" target="_blank" class="soc-btn" style="--hbg:#E8F5E9;--hc:#2E7D32" title="WhatsApp"><i class="ph ph-whatsapp-logo"></i></a>
+        </div>
+
+        <!-- Value strip -->
+
+        <!-- Navy bottom strip -->
+        <div class="navy-strip">
+          <div class="ns-left">
+            <div class="ns-globe"><i class="ph ph-globe"></i></div>
+            <div>
+              <div class="ns-web-lbl">Visit Our Website</div>
+              <div class="ns-web-url">www.techimedia.com</div>
+            </div>
+          </div>
+          <div style="width:1px;height:36px;background:rgba(255,255,255,0.15);flex-shrink:0"></div>
+          <div class="ns-right">
+            <div class="ns-wa"><i class="ph ph-whatsapp-logo"></i></div>
+            <div>
+              <div class="ns-touch-lbl">Get in Touch</div>
+              <div class="ns-phone">+91 9888623715</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /body -->
+    </div><!-- /card -->
+
+    <!-- Footer -->
+    <div class="footer-card">
+      <div class="fc-brand">
+        <div class="fc-logo">TM</div>
+        <div class="fc-text">
+          <strong>Techimedia</strong>
+          <span>Digital Business Card</span>
+        </div>
+      </div>
+      <button class="save-btn" onclick="saveContact()"><i class="ph ph-download-simple"></i> Save vCard</button>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    function saveContact(){
+      var v=['BEGIN:VCARD','VERSION:3.0','FN:Techimedia','ORG:Techimedia',
+        'TITLE:Web & Digital Marketing Agency',
+        'TEL;TYPE=WORK,VOICE:+919888623715',
+        'EMAIL:info@techimedia.com','URL:https://www.techimedia.com',
+        'X-SOCIALPROFILE;type=instagram:https://instagram.com/techimedia',
+        'NOTE:Innovate your world with Techimedia','END:VCARD'];
+      var b=new Blob([v.join('\r\n')],{type:'text/vcard'});
+      var u=URL.createObjectURL(b),a=document.createElement('a');
+      a.href=u;a.download='Techimedia.vcf';a.click();URL.revokeObjectURL(u);
+      showToast('\u2705 Contact saved!');
+    }
+    async function shareCard(){
+      var d={title:'Techimedia \u2013 Digital Business Card',text:'Innovate your world with Techimedia \u2013 +91 9888623715',url:window.location.href};
+      if(navigator.share){try{await navigator.share(d);}catch(e){}}
+      else{try{await navigator.clipboard.writeText(window.location.href);showToast('\uD83D\uDD17 Link copied!');}catch(e){showToast('Copy the URL from the address bar');}}
+    }
+    function showToast(m){
+      var t=document.getElementById('toast');
+      t.textContent=m;t.classList.add('show');
+      setTimeout(function(){t.classList.remove('show');},2800);
+    }
+    var rs=document.createElement('style');
+    rs.textContent='@keyframes rpl{to{transform:scale(3.5);opacity:0}}';
+    document.head.appendChild(rs);
+    document.querySelectorAll('.ctile,.srv-item').forEach(function(el){
+      el.addEventListener('click',function(e){
+        var r=this.getBoundingClientRect(),sz=Math.max(r.width,r.height)*1.4;
+        var x=e.clientX-r.left-sz/2,y=e.clientY-r.top-sz/2;
+        var rp=document.createElement('span');
+        rp.style.cssText='position:absolute;width:'+sz+'px;height:'+sz+'px;left:'+x+'px;top:'+y+'px;border-radius:50%;background:rgba(21,101,192,0.08);transform:scale(0);pointer-events:none;z-index:0;animation:rpl .65s ease-out forwards';
+        this.style.position='relative';this.style.overflow='hidden';
+        this.appendChild(rp);setTimeout(function(){rp.remove();},750);
+      });
+    });
+    var card=document.querySelector('.card');
+    card.addEventListener('mousemove',function(e){
+      var r=this.getBoundingClientRect();
+      var x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+      this.style.transform='perspective(1000px) rotateY('+(x*3.5)+'deg) rotateX('+(-y*3.5)+'deg)';
+    });
+    card.addEventListener('mouseleave',function(){
+      this.style.transition='transform .65s cubic-bezier(.34,1.56,.64,1)';
+      this.style.transform='perspective(1000px) rotateY(0deg) rotateX(0deg)';
+      setTimeout(function(){card.style.transition='';},700);
+    });
+  </script>
+</body>
+</html>
